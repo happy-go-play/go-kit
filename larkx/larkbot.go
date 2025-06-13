@@ -39,9 +39,19 @@ func (a LarkBot) SendTextMessage(text string) error {
 	return nil
 }
 
+// SendMarkdownMessageCard sends a markdown message with a title.
+// The body should be in Markdown format.
+// The title is the card title, is text only, not Markdown.
+func (a LarkBot) SendMarkdownMessageCard(body, title string) error {
+	b := lark.NewCardBuilder()
+	cardBlock := b.Card(
+		b.Markdown(body),
+	).Title(title).Purple()
+	return a.SendMessageCard(cardBlock)
+}
+
 func (a LarkBot) SendMessageCard(cardBlock *card.Block) error {
 	bot := lark.NewNotificationBot(a.webhook)
-
 	msgV4 := lark.NewMsgBuffer(lark.MsgInteractive)
 	msgBuffer := msgV4.Card(cardBlock.String())
 	resp, err := bot.PostNotificationV2(msgBuffer.Build())

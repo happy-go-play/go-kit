@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+const (
+	webhook = ""
+	secret  = ""
+)
+
 func TestSendTextMessage(t *testing.T) {
 	larkBotConf := LarkBotConfig{
 		Webhook: "...",
@@ -16,7 +21,7 @@ func TestSendTextMessage(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestCardExample1(t *testing.T) {
+func TestSendMessageCard(t *testing.T) {
 	b := lark.NewCardBuilder()
 	c := b.Card(
 		b.Markdown("🔥 **抖音文创“双十一”全年最优惠最低价活动今日开启** 🔥 \n🔥跨店每满300-30（可无限叠加）\n🔥店铺优惠可以和平台满减叠加：满199-20（叠加跨店满减，可以满300-50哦）").
@@ -36,13 +41,27 @@ func TestCardExample1(t *testing.T) {
 			AddText(b.Text("活动时间：2021年11月1日~2021年11月20日")),
 	).Title("\U0001F973 抖音文创“双十一”年度大促").Purple()
 
-	webhook := ""
-	secret := ""
 	conf := LarkBotConfig{
 		Webhook: webhook,
 		Secret:  secret,
 	}
 	client := NewLarkBot(conf)
 	err := client.SendMessageCard(c)
+	require.NoError(t, err, "error: %v", err)
+}
+
+func TestSendMarkdownMessage(t *testing.T) {
+	title := "如果不需要显示标题的话，标题可以省略"
+	msg := `
+🔥 **抖音文创“双十一”全年最优惠最低价活动今日开启** 🔥 
+🔥跨店每满300-30（可无限叠加）
+🔥店铺优惠可以和平台满减叠加：满199-20（叠加跨店满减，可以满300-50哦）
+`
+	conf := LarkBotConfig{
+		Webhook: webhook,
+		Secret:  secret,
+	}
+	client := NewLarkBot(conf)
+	err := client.SendMarkdownMessageCard(msg, title)
 	require.NoError(t, err, "error: %v", err)
 }
