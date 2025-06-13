@@ -3,6 +3,7 @@ package larkx
 import (
 	"fmt"
 	"github.com/go-lark/lark"
+	"github.com/go-lark/lark/card"
 	"time"
 )
 
@@ -28,6 +29,21 @@ func (a LarkBot) SendTextMessage(text string) error {
 		msgBuffer = msgBuffer.WithSign(a.secret, time.Now().Unix())
 	}
 	msgBuffer = msgBuffer.Text(text)
+	resp, err := bot.PostNotificationV2(msgBuffer.Build())
+	if err != nil {
+		return fmt.Errorf("lark bot.PostNotificationV2 error: %w", err)
+	}
+	if resp.Code != 0 {
+		return fmt.Errorf("resp.Code: %v, resp.Msg: %s, resp.StatusCode: %v, resp.StatusMessage: %s", resp.Code, resp.Msg, resp.StatusCode, resp.StatusMessage)
+	}
+	return nil
+}
+
+func (a LarkBot) SendMessageCard(cardBlock *card.Block) error {
+	bot := lark.NewNotificationBot(a.webhook)
+
+	msgV4 := lark.NewMsgBuffer(lark.MsgInteractive)
+	msgBuffer := msgV4.Card(cardBlock.String())
 	resp, err := bot.PostNotificationV2(msgBuffer.Build())
 	if err != nil {
 		return fmt.Errorf("lark bot.PostNotificationV2 error: %w", err)
