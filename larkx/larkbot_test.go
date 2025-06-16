@@ -1,9 +1,11 @@
 package larkx
 
 import (
+	"fmt"
 	"github.com/go-lark/lark"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
 
 const (
@@ -13,12 +15,29 @@ const (
 
 func TestSendTextMessage(t *testing.T) {
 	larkBotConf := LarkBotConfig{
-		Webhook: "...",
-		Secret:  "",
+		Webhook: webhook,
+		Secret:  secret,
 	}
 	bot := NewLarkBot(larkBotConf)
 	err := bot.SendTextMessage("Hello, World!")
 	require.NoError(t, err)
+}
+
+func TestNewLarkBotWithLimiter(t *testing.T) {
+	larkBotConf := LarkBotConfig{
+		Webhook: webhook,
+		Secret:  secret,
+	}
+	bot := NewLarkBotWithLimiter(larkBotConf, 1, 2)
+	failedCount := 0
+	for i := 0; i < 10; i++ {
+		err := bot.SendTextMessage(fmt.Sprintf("[%s]Hello, World!", time.Now().Format(time.RFC3339Nano)))
+		if err != nil {
+			failedCount++
+			require.ErrorIs(t, err, ErrLarkBotRateLimitExceeded, "expected rate limit error, got: %v", err)
+		}
+	}
+	t.Logf("Failed count: %d", failedCount)
 }
 
 func TestSendMessageCard(t *testing.T) {
