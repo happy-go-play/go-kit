@@ -29,9 +29,19 @@ func StartOfDay(t time.Time) time.Time {
 	return time.Date(y, m, d, 0, 0, 0, 0, t.Location())
 }
 
+func StartOfDayInLocation(t time.Time, loc *time.Location) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, 0, 0, 0, 0, loc)
+}
+
 func EndOfDay(t time.Time) time.Time {
 	y, m, d := t.Date()
 	return time.Date(y, m, d, 23, 59, 59, 999999999, t.Location())
+}
+
+func EndOfDayInLocation(t time.Time, loc *time.Location) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, 23, 59, 59, 999999999, loc)
 }
 
 // FormatDuration 格式化 Duration 为 Xd Yh Zm Ws，左侧的单位如果为0则不显示
