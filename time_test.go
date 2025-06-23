@@ -6,6 +6,69 @@ import (
 	"time"
 )
 
+func TestStartOfDayInLocation(t *testing.T) {
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	require.NoError(t, err, "Failed to load location")
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		startOfHour := StartOfDayInLocation(now, loc)
+		expected := time.Date(2025, 6, 2, 0, 0, 0, 0, loc)
+		require.Equal(t, expected, startOfHour, "Expected %s but got %s", expected, startOfHour)
+	}
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		t.Logf("now in %s is %s", loc, now)
+		t.Logf("now in UTC is %s", now.UTC())
+		startOfHour := StartOfDayInLocation(now, time.UTC)
+		expected := time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC)
+		require.Equal(t, expected, startOfHour, "Expected %s but got %s", expected, startOfHour)
+	}
+}
+
+func TestStartOfHourInLocation(t *testing.T) {
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	require.NoError(t, err, "Failed to load location")
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		startOfHour := StartOfHourInLocation(now, loc)
+		expected := time.Date(2025, 6, 2, 1, 0, 0, 0, loc)
+		require.Equal(t, expected, startOfHour, "Expected %s but got %s", expected, startOfHour)
+	}
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		t.Logf("now in %s is %s", loc, now)
+		t.Logf("now in UTC is %s", now.UTC())
+		startOfHour := StartOfHourInLocation(now, time.UTC)
+		expected := time.Date(2025, 6, 1, 17, 0, 0, 0, time.UTC)
+		require.Equal(t, expected, startOfHour, "Expected %s but got %s", expected, startOfHour)
+	}
+}
+
+func TestEndOfHourInLocation(t *testing.T) {
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	require.NoError(t, err, "Failed to load location")
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		endOfHour := EndOfHourInLocation(now, loc)
+		expected := time.Date(2025, 6, 2, 1, 59, 59, 999999999, loc)
+		require.Equal(t, expected, endOfHour, "Expected %s but got %s", expected, endOfHour)
+	}
+
+	{
+		now := time.Date(2025, 6, 2, 1, 1, 1, 1, loc)
+		t.Logf("now in %s is %s", loc, now)
+		t.Logf("now in UTC is %s", now.UTC())
+		endOfHour := EndOfHourInLocation(now, time.UTC)
+		expected := time.Date(2025, 6, 1, 17, 59, 59, 999999999, time.UTC)
+		require.Equal(t, expected, endOfHour, "Expected %s but got %s", expected, endOfHour)
+	}
+}
+
 func TestFormatDuration(t *testing.T) {
 	{
 		d := 10 * 24 * time.Hour

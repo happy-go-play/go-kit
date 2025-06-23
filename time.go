@@ -30,7 +30,7 @@ func StartOfDay(t time.Time) time.Time {
 }
 
 func StartOfDayInLocation(t time.Time, loc *time.Location) time.Time {
-	y, m, d := t.Date()
+	y, m, d := t.In(loc).Date()
 	return time.Date(y, m, d, 0, 0, 0, 0, loc)
 }
 
@@ -40,7 +40,7 @@ func EndOfDay(t time.Time) time.Time {
 }
 
 func EndOfDayInLocation(t time.Time, loc *time.Location) time.Time {
-	y, m, d := t.Date()
+	y, m, d := t.In(loc).Date()
 	return time.Date(y, m, d, 23, 59, 59, 999999999, loc)
 }
 
@@ -50,8 +50,9 @@ func StartOfHour(t time.Time) time.Time {
 }
 
 func StartOfHourInLocation(t time.Time, loc *time.Location) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d, t.Hour(), 0, 0, 0, loc)
+	timeInLoc := t.In(loc)
+	y, m, d := timeInLoc.Date()
+	return time.Date(y, m, d, timeInLoc.Hour(), 0, 0, 0, loc)
 }
 
 func EndOfHour(t time.Time) time.Time {
@@ -60,8 +61,9 @@ func EndOfHour(t time.Time) time.Time {
 }
 
 func EndOfHourInLocation(t time.Time, loc *time.Location) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d, t.Hour(), 59, 59, 999999999, loc)
+	timeInLoc := t.In(loc)
+	y, m, d := timeInLoc.Date()
+	return time.Date(y, m, d, timeInLoc.Hour(), 59, 59, 999999999, loc)
 }
 
 // FormatDuration 格式化 Duration 为 Xd Yh Zm Ws，左侧的单位如果为0则不显示
