@@ -7,6 +7,33 @@ import (
 	"time"
 )
 
+var (
+	UTC1   = time.FixedZone("UTC+1", 1*3600)    // UTC+01
+	UTC2   = time.FixedZone("UTC+2", 2*3600)    // UTC+02
+	UTC3   = time.FixedZone("UTC+3", 3*3600)    // UTC+03
+	UTC4   = time.FixedZone("UTC+4", 4*3600)    // UTC+04
+	UTC5   = time.FixedZone("UTC+5", 5*3600)    // UTC+05
+	UTC6   = time.FixedZone("UTC+6", 6*3600)    // UTC+06
+	UTC7   = time.FixedZone("UTC+7", 7*3600)    // UTC+07
+	UTC8   = time.FixedZone("UTC+8", 8*3600)    // UTC+08
+	UTC9   = time.FixedZone("UTC+9", 9*3600)    // UTC+09
+	UTC10  = time.FixedZone("UTC+10", 10*3600)  // UTC+10
+	UTC11  = time.FixedZone("UTC+11", 11*3600)  // UTC+11
+	UTC12  = time.FixedZone("UTC+12", 12*3600)  // UTC+12
+	UTCm1  = time.FixedZone("UTC-1", -1*3600)   // UTC-01 UTC minus 1 hour
+	UTCm2  = time.FixedZone("UTC-2", -2*3600)   // UTC-02 UTC minus 2 hours
+	UTCm3  = time.FixedZone("UTC-3", -3*3600)   // UTC-03 UTC minus 3 hours
+	UTCm4  = time.FixedZone("UTC-4", -4*3600)   // UTC-04 UTC minus 4 hours
+	UTCm5  = time.FixedZone("UTC-5", -5*3600)   // UTC-05 UTC minus 5 hours
+	UTCm6  = time.FixedZone("UTC-6", -6*3600)   // UTC-06 UTC minus 6 hours
+	UTCm7  = time.FixedZone("UTC-7", -7*3600)   // UTC-07 UTC minus 7 hours
+	UTCm8  = time.FixedZone("UTC-8", -8*3600)   // UTC-08 UTC minus 8 hours
+	UTCm9  = time.FixedZone("UTC-9", -9*3600)   // UTC-09 UTC minus 9 hours
+	UTCm10 = time.FixedZone("UTC-10", -10*3600) // UTC-10 UTC minus 10 hours
+	UTCm11 = time.FixedZone("UTC-11", -11*3600) // UTC-11 UTC minus 11 hours
+	UTCm12 = time.FixedZone("UTC-12", -12*3600) // UTC-12 UTC minus 12 hours
+)
+
 func ParseUnixTimestamp(timestamp string) (time.Time, error) {
 	ts, err := strconv.Atoi(timestamp)
 	if err != nil {
