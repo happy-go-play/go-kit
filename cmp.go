@@ -18,18 +18,24 @@ func Abs[T numeric](x T) T {
 
 // Max returns the larger of a and b.
 // T must be an ordered type (supports <, <=, >, >=).
-func Max[T cmp.Ordered](a, b T) T {
-	if a >= b {
-		return a
+func Max[T cmp.Ordered](a T, b ...T) T {
+	maxVal := a
+	for _, v := range b {
+		if v > maxVal {
+			maxVal = v
+		}
 	}
-	return b
+	return maxVal
 }
 
 // Min returns the smaller of a and b.
 // T must be an ordered type (supports <, <=, >, >=).
-func Min[T cmp.Ordered](a, b T) T {
-	if a <= b {
-		return a
+func Min[T cmp.Ordered](a T, b ...T) T {
+	minVal := a
+	for _, v := range b {
+		if v < minVal {
+			minVal = v
+		}
 	}
-	return b
+	return minVal
 }
