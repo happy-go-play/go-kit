@@ -18,6 +18,9 @@ func Abs[T numeric](x T) T {
 
 // Max returns the larger of a and b.
 // T must be an ordered type (supports <, <=, >, >=).
+// 这是对 内置的min 和 slices.Min 的补充：
+// - Go 1.21 引入的内置 max 函数虽然支持多个参数，但不支持使用 ... 展开切片。
+// - slices.Max 的参数是一个slice，当其length < 1 时会panic
 func Max[T cmp.Ordered](a T, b ...T) T {
 	maxVal := a
 	for _, v := range b {
@@ -30,6 +33,9 @@ func Max[T cmp.Ordered](a T, b ...T) T {
 
 // Min returns the smaller of a and b.
 // T must be an ordered type (supports <, <=, >, >=).
+// 这是对 内置的min 和 slices.Min 的补充：
+// - Go 1.21 引入的内置 min 函数虽然支持多个参数，但不支持使用 ... 展开切片。
+// - slices.Min 的参数是一个slice，当其length < 1 时会panic
 func Min[T cmp.Ordered](a T, b ...T) T {
 	minVal := a
 	for _, v := range b {
