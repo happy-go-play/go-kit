@@ -2,10 +2,11 @@ package larkx
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/go-lark/lark"
 	"github.com/go-lark/lark/card"
 	"github.com/happy-go-play/go-kit/larkx/internal"
-	"time"
 )
 
 var ErrLarkBotRateLimitExceeded = fmt.Errorf("lark bot rate limit exceeded, please try again later")
@@ -60,6 +61,42 @@ func (a LarkBot) SendTextMessage(text string) error {
 		return err
 	}
 	return nil
+}
+
+// SendMarkdownMessageV2 sends a markdown message using card JSON schema 2.0.
+// body is Markdown content (CommonMark / GFM).
+// title is the card header title; pass empty string to omit the header.
+func (a LarkBot) SendMarkdownMessageV2(body, title string) error {
+	// 标题主题样式颜色。支持 "blue"|"wathet"|"turquoise"|"green"|"yellow"|"orange"|"red"|"carmine"|"violet"|"purple"|"indigo"|"grey"|"default"。默认值 default。
+	return a.sendMarkdownMessageV2(body, title, "default")
+}
+
+// SendMarkdownMessageV2WithTemplate sends a markdown message using card JSON schema 2.0.
+// headerTemplate is the header color template, e.g. blue, purple, green.
+func (a LarkBot) SendMarkdownMessageV2WithTemplate(body, title, headerTemplate string) error {
+	return a.sendMarkdownMessageV2(body, title, headerTemplate)
+}
+
+func (a LarkBot) sendMarkdownMessageV2(body, title, headerTemplate string) error {
+	if !a.limiter.Allow() {
+		return ErrLarkBotRateLimitExceeded
+	}
+
+	cardJSON, err := buildMarkdownCardV2(body, title, headerTemplate)
+	if err != nil {
+		return fmt.Errorf("build markdown card v2: %w", err)
+	}
+
+	bot := lark.NewNotificationBot(a.webhook)
+	msgBuffer := lark.NewMsgBuffer(lark.MsgInteractive).Card(cardJSON)
+	if a.secret != "" {
+		msgBuffer = msgBuffer.WithSign(a.secret, time.Now().Unix())
+	}
+	resp, err := bot.PostNotificationV2(msgBuffer.Build())
+	if err != nil {
+		return fmt.Errorf("lark bot.PostNotificationV2 error: %w", err)
+	}
+	return checkResponseCode(resp)
 }
 
 // SendMarkdownMessageCard sends a markdown message with a title.
